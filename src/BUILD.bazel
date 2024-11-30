@@ -1,11 +1,17 @@
-
 # -------------------------------------
 # Copyright (c) 2024, Dror Kabely
 # -------------------------------------
 #
 
-load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("@aspect_rules_py//py:defs.bzl", "py_binary", "py_library")
 
+# image packaging and load
+load("@aspect_bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
+load("@aspect_bazel_lib//lib:tar.bzl", "tar")
+load("@rules_oci//oci:defs.bzl", oci_load = "oci_tarball", "oci_push")
+load("//tools/oci:py_layer.bzl", "py_oci_image")
+
+# -------------------------- Python Code ---------------------------------
 py_library(
     name = "src",
     srcs = ["__init__.py"],
@@ -20,4 +26,60 @@ py_binary(
     main = "__main__.py",
     visibility = ["//:__subpackages__"],
 )
+# -------------------------- Python Code ---------------------------------
+
+# -------------------------- OCI Images ----------------------------------
+# -------------------------- Platforms Support ---------------------------
+platform(
+    name = "aarch64_linux",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:aarch64",
+    ],
+)
+
+platform(
+    name = "x86_64_linux",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+)
+# -------------------------- Platforms Support ---------------------------
+
+# -------------------------- Image ---------------------------------------
+py_oci_image(
+    name = "image",
+    base = "@ubuntu",
+    binary = ":src_bin",
+    entrypoint = ["/src/src_bin"],
+)
+
+
+platform_transition_filegroup(
+    name = "platform_image",
+    srcs = [":image"],
+    target_platform = select({
+        "@platforms//cpu:arm64": ":aarch64_linux",
+        "@platforms//cpu:x86_64": ":x86_64_linux",
+    }),
+)
+
+# $ bazel run //src:image.load
+# $ docker run --rm local/hello-world-bin:latest
+oci_load(
+    name = "image.load",
+    image = ":platform_image",
+    repo_tags = ["local/hello-world-bin:latest"],
+)
+
+oci_push(
+    name = "image.push",
+    image = ":platform_image",
+    repository = "localhost:5000/hello-world-bin",
+    remote_tags = ["latest"]
+)
+
+# -------------------------- Image ---------------------------------------
+# -------------------------- Docker --------------------------------------
 

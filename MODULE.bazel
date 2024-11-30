@@ -109,22 +109,10 @@ oci.pull(
     digest = "sha256:b359f1067efa76f37863778f7b6d0e8d911e3ee8efa807ad01fbf5dc1ef9006b",
 )
 
-# prod base images
-oci.pull(
-    name = "distroless",
-    image = "gcr.io/distroless/base-debian12",
-    platforms = [
-        "linux/arm64/v8",
-        "linux/amd64",
-    ],
-    tag = "nonroot",
-    digest = "sha256:6d4a4f40e93615df1677463ca56456379cc3a4e2359308c9e72bc60ffc4a12a9",
-)
-
 # images repos
-use_repo(oci, 
+use_repo(
+    oci, 
     "ubuntu", 
-    "distroless"
 )
 
 
