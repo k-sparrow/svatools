@@ -10,7 +10,7 @@ load("@aspect_rules_lint//lint:lint_test.bzl", "lint_test")
 
 flake8 = lint_flake8_aspect(
     binary = "@@//tools/lint:flake8",
-    config = "@@//:.flake8",
+    config = "@@//assets/lint:.flake8",
 )
 
 lake8_test = lint_test(aspect = flake8)
@@ -18,7 +18,7 @@ lake8_test = lint_test(aspect = flake8)
 ruff = lint_ruff_aspect(
     binary = "@multitool//tools/ruff",
     configs = [
-        "@@//:.ruff.toml",
+        "@@//assets/lint:.ruff.toml",
     ],
 )
 
