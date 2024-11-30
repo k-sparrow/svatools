@@ -1,0 +1,130 @@
+# -------------------------------------
+# Copyright (c) 2024, Dror Kabely
+# -------------------------------------
+#
+
+# change the name of module at your leisure
+module(
+    name = "pybazel-tempalte",
+    version = "0.0.1",
+    compatibility_level = 1,
+)
+
+# Python version
+PY_VERSION = "3.11"
+
+# python rules version
+PY_RULES_VERSION = "0.27.1"
+
+# containers
+OCI_RULES_VERSION = "1.8.0"   # using this instead of latest because of login errors with docker
+CONTAINER_STRUCTURE_TEST_VERSION = "1.16.0"
+
+# Aspect.dev enhancements for python rules
+# Used mainly in conjuction with rules_oci
+# for python image creation
+ASPECT_RULES_PY_VERSION = "0.7.3"
+
+# Aspect.dev enhancementf for bazel skylib
+ASPECT_BAZEL_LIB_VERSION = "2.7.8"
+
+# Linting is important
+ASPECT_RULES_LINT = "1.0.2"
+
+# Build multirun, for images mainly
+# Integrates well with a docker-compose style of bringup
+RULES_MULTIRUN_VERSION = "0.9.0"
+
+# Gazelle version
+GAZELLE_VERSION = "0.31.0"
+GAZELLE_PYTOHN_PLUGIN_VERSION = "0.22.0"
+
+# ---------------------- Module Dependencies ----------------------------------------------
+bazel_dep(name = "rules_python", version = PY_RULES_VERSION)
+bazel_dep(name = "rules_oci", version = OCI_RULES_VERSION)
+bazel_dep(name = "container_structure_test", version = CONTAINER_STRUCTURE_TEST_VERSION)
+bazel_dep(name = "aspect_bazel_lib", version = ASPECT_BAZEL_LIB_VERSION)
+bazel_dep(name = "aspect_rules_py", version = ASPECT_RULES_PY_VERSION)
+bazel_dep(name = "aspect_rules_lint", version = ASPECT_RULES_LINT)
+bazel_dep(name = "rules_multirun", version = RULES_MULTIRUN_VERSION)
+# ---------------------- Module Dependencies ----------------------------------------------
+
+# ----------------------- PYTHON GAZELLE ------------------------------------
+# The following stanza defines the dependency rules_python_gazelle_plugin.
+# For typical setups you set the version.
+bazel_dep(name = "rules_python_gazelle_plugin", version = GAZELLE_PYTOHN_PLUGIN_VERSION)
+
+# The following stanza defines the dependency gazelle.
+bazel_dep(name = "gazelle", version = GAZELLE_VERSION, repo_name = "bazel_gazelle")
+
+# ----------------------- PYTHON GAZELLE ------------------------------------
+
+# We next initialize the python toolchain using the extension.
+# You can set different Python versions in this block.
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    configure_coverage_tool = True,
+    # Only set when you have mulitple toolchain versions.
+    is_default = True,
+    python_version = PY_VERSION,
+)
+
+# You only need to load this repositories if you are using multiple Python versions.
+# I'm doing this for the sake of consistency with the original G repo
+use_repo(python, "python_3_11", "python_versions")
+
+# Register an already-defined toolchain so that Bazel can use it during toolchain resolution.
+register_toolchains(
+    "@python_3_11//:all",
+)
+
+# This extension allows a user to create modifications to how rules_python
+# creates different wheel repositories.  Different attributes allow the user
+# to modify the BUILD file, and copy files.
+# See @rules_python//python/extensions:whl_mods.bzl attributes for more information
+# on each of the attributes.
+# You are able to set a hub name, so that you can have different modifications of the same
+# wheel in different pip hubs.
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+
+# fetch 3rd party libraries
+pip.parse(
+    hub_name = "pip",
+    python_version = PY_VERSION,
+    requirements_lock = "//:requirements_lock.txt",
+)
+use_repo(pip, "pip")
+
+oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+
+# dev base image
+oci.pull(
+    name = "ubuntu",
+    image = "ubuntu",
+    platforms = [
+        "linux/arm64/v8",
+        "linux/amd64",
+    ],
+    tag = "latest",
+    digest = "sha256:b359f1067efa76f37863778f7b6d0e8d911e3ee8efa807ad01fbf5dc1ef9006b",
+)
+
+# prod base images
+oci.pull(
+    name = "distroless",
+    image = "gcr.io/distroless/base-debian12",
+    platforms = [
+        "linux/arm64/v8",
+        "linux/amd64",
+    ],
+    tag = "nonroot",
+    # digest = 
+)
+
+# images repos
+use_repo(oci, 
+    "ubuntu", 
+    "distroless"
+)
+
+
