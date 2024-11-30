@@ -12,20 +12,7 @@ load("@rules_oci//oci:defs.bzl", oci_load = "oci_tarball", "oci_push")
 load("//tools/oci:py_layer.bzl", "py_oci_image")
 
 # -------------------------- Python Code ---------------------------------
-py_library(
-    name = "src",
-    srcs = ["__init__.py"],
-    imports = [".."],
-    visibility = ["//:__subpackages__"],
-)
 
-py_binary(
-    name = "src_bin",
-    srcs = ["__main__.py"],
-    imports = [".."],
-    main = "__main__.py",
-    visibility = ["//:__subpackages__"],
-)
 # -------------------------- Python Code ---------------------------------
 
 # -------------------------- OCI Images ----------------------------------
@@ -51,8 +38,8 @@ platform(
 py_oci_image(
     name = "image",
     base = "@ubuntu",
-    binary = ":src_bin",
-    entrypoint = ["/src/src_bin"],
+    # binary = ":src_bin",
+    # entrypoint = ["/src/src_bin"],
 )
 
 
