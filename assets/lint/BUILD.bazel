@@ -8,5 +8,5 @@ exports_files(
         "WORKSPACE.bazel",
         ".ruff.toml",
         ".flake8",
-    ]
+    ],
 )

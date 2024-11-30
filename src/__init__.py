@@ -2,5 +2,3 @@
 # Copyright (c) 2024, Dror Kabely
 # -------------------------------------
 #
-
-package(default_visibility = ["//visibility:public"])

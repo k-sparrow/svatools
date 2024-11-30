@@ -56,7 +56,7 @@ exports_files(
         "WORKSPACE.bazel",
         ".ruff.toml",
         ".flake8",
-    ]
+    ],
 )
 
 # allows users to format code using

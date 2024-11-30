@@ -6,14 +6,70 @@
 manifest:
   modules_mapping:
     flake8: flake8
+    flake8.api: flake8
+    flake8.api.legacy: flake8
+    flake8.checker: flake8
+    flake8.defaults: flake8
+    flake8.discover_files: flake8
+    flake8.exceptions: flake8
+    flake8.formatting: flake8
+    flake8.formatting.base: flake8
+    flake8.formatting.default: flake8
+    flake8.main: flake8
+    flake8.main.application: flake8
+    flake8.main.cli: flake8
+    flake8.main.debug: flake8
+    flake8.main.options: flake8
+    flake8.options: flake8
+    flake8.options.aggregator: flake8
+    flake8.options.config: flake8
+    flake8.options.manager: flake8
+    flake8.options.parse_args: flake8
+    flake8.plugins: flake8
+    flake8.plugins.finder: flake8
+    flake8.plugins.pycodestyle: flake8
+    flake8.plugins.pyflakes: flake8
+    flake8.plugins.reporter: flake8
+    flake8.processor: flake8
+    flake8.statistics: flake8
+    flake8.style_guide: flake8
+    flake8.utils: flake8
+    flake8.violation: flake8
     iniconfig: iniconfig
+    iniconfig.exceptions: iniconfig
     mccabe: mccabe
     packaging: packaging
+    packaging.markers: packaging
+    packaging.metadata: packaging
+    packaging.requirements: packaging
+    packaging.specifiers: packaging
+    packaging.tags: packaging
+    packaging.utils: packaging
+    packaging.version: packaging
     pluggy: pluggy
     py: pytest
     pycodestyle: pycodestyle
     pyflakes: pyflakes
+    pyflakes.api: pyflakes
+    pyflakes.checker: pyflakes
+    pyflakes.messages: pyflakes
+    pyflakes.reporter: pyflakes
+    pyflakes.scripts: pyflakes
+    pyflakes.scripts.pyflakes: pyflakes
+    pyflakes.test: pyflakes
+    pyflakes.test.harness: pyflakes
+    pyflakes.test.test_api: pyflakes
+    pyflakes.test.test_builtin: pyflakes
+    pyflakes.test.test_code_segment: pyflakes
+    pyflakes.test.test_dict: pyflakes
+    pyflakes.test.test_doctests: pyflakes
+    pyflakes.test.test_imports: pyflakes
+    pyflakes.test.test_is_literal: pyflakes
+    pyflakes.test.test_match: pyflakes
+    pyflakes.test.test_other: pyflakes
+    pyflakes.test.test_type_annotations: pyflakes
+    pyflakes.test.test_undefined_names: pyflakes
     pytest: pytest
   pip_repository:
     name: pip
-integrity: 3b974b62adc0f07c9b844e4267a1461a56c5d8b4d850418897844c65b947d6f5
+integrity: 09d4113e98715d1c51eedcf8024ed85f20bdc24472fe12d1403daa417632acfa
