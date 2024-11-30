@@ -26,7 +26,7 @@ CONTAINER_STRUCTURE_TEST_VERSION = "1.16.0"
 ASPECT_RULES_PY_VERSION = "1.0.0"
 
 # Aspect.dev enhancementf for bazel skylib
-ASPECT_BAZEL_LIB_VERSION = "2.7.8"
+ASPECT_BAZEL_LIB_VERSION = "2.9.4"
 
 # Linting is important
 ASPECT_RULES_LINT = "1.0.2"
